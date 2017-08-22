@@ -3,16 +3,16 @@
 CoderFriends
 ============
 
-##Objective
+## Objective
 Use a Node backend with Passport and Express to show a user's coder friends.
 
-##Resources
+## Resources
 * [passport-github2] (https://github.com/cfsghost/passport-github)
 * [Github API Docs] (https://developer.github.com/v3/)
 * [node-github] (https://github.com/mikedeboer/node-github)
 * [passport-auth0] (https://www.npmjs.com/package/passport-auth0)
 
-##Step 1: Create Skeleton of Angular App
+## Step 1: Create Skeleton of Angular App
 To mix it up, let's create the file structure for the Angular app first.
 
 * Create a `/public` folder
@@ -25,18 +25,18 @@ To mix it up, let's create the file structure for the Angular app first.
 
 Let's create routes for our app:
 
-###/
+### /
 The base route should display a "Login with Github" button that will redirect users to `/auth/github`. You may accomplish this by either 1) making a login.html templateUrl for this route, or 2) using an inline template in the route configuration (rather than a templateUrl).
 
-###/home
+### /home
 The home route will display the current user's GitHub friends via the home.html template
 
-###/friend/:github_username
+### /friend/:github_username
 This route will display a friend's information as well as what they're currently working on.
 
 Create the server.js file and set it up to serve your static files.
 
-##Step 2: Create the auth endpoints
+## Step 2: Create the auth endpoints
 
 * Install and require your dependencies
   * express
@@ -47,18 +47,18 @@ Create the server.js file and set it up to serve your static files.
 * Make sure you use the session, passport.initialize and passport.session middleware
 * Set up your auth endpoints:
 
-####/auth/github
+#### /auth/github
 Use passport.authenticate with 'auth0' as the first parameter, then {connection: 'github'} as the second parameter. This will choose GitHub as the authentication service. 
 
 Make sure to use 'auth/github/callback' as the callbackURL.
 
-####/auth/github/callback
+#### /auth/github/callback
 Use passport.authenticate and upon successful auth, send the user to `/#/home`. 
 
-##Step 3: Github following Endpoint
+## Step 3: Github following Endpoint
 Let's link the Angular Github service to our server.js
 
-####GET `/api/github/followers`
+#### GET `/api/github/followers`
 In server.js, create the above endpoint and have it return the users who follow the currently logged in user. To do this, you will need to make an API call directly from your server.js file. You can one of two ways:
 - Use an http request using the [request](https://www.npmjs.com/package/request#http-authentication) module. The url you will need to hit is 
 ```
@@ -82,14 +82,14 @@ var requireAuth = function(req, res, next) {
 
 If the client gets a status of 403, it will know that it needs to redirect the user to the `/` page so the user can log in again. **Keep in mind, this will happen every time your server restarts.**
 
-##Step 4: homeCtrl + Github Service
+## Step 4: homeCtrl + Github Service
 Now let's connect your Angular app to this setup.
 
 * In GithubService, create a `getFollowing` method that returns the results from the API call we created in Step 3.
 * Let's resolve the promise from `getFollowing` into a `friends` variable in the `/home` route before it loads.
 * In your homeCtrl (create this file, or do an inline controller in the home route in `app.js`), let's throw friends into the scope and render them in the view (home.html).
 
-##Step 5: NG un-authed auto-redirect
+## Step 5: NG un-authed auto-redirect
 We need a way for Angular to detect an un-authed web request (403) so we can redirect them back to the login page. We can do that by injecting a service that acts as an interceptor in Angular's httpProvider. It works sort of like middleware in Node. Add this chunk of code to your `app.js` file.
 
 ```
@@ -112,10 +112,10 @@ We need a way for Angular to detect an un-authed web request (403) so we can red
 });
 ```
 
-##Step 5: Friend route
+## Step 5: Friend route
 Make it so that when the user clicks on one of the selected friends, it loads in that user's latest activity.
 
-####GET /api/github/:username/activity
+#### GET /api/github/:username/activity
 Create this endpoint in your server.js that grabs data for the given username. 
 - If you are using the `request` module from Step 3, the url you will need to hit is:
 ```
